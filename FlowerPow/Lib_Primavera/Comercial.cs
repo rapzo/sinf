@@ -259,11 +259,11 @@ namespace FirstREST.Lib_Primavera
         #endregion Cliente;   // -----------------------------  END   CLIENTE    ----------------------- 
 
 
-
+        # region Artigos
 
         public static Lib_Primavera.Model.Artigo GetArtigo(string codArtigo)
         {
-           // ErpBS objMotor = new ErpBS();
+            // ErpBS objMotor = new ErpBS();
             
             GcpBEArtigo objArtigo = new GcpBEArtigo();
             Model.Artigo myArt = new Model.Artigo();
@@ -292,9 +292,6 @@ namespace FirstREST.Lib_Primavera
             }
             
         }
-
-
-
 
 
 
@@ -335,8 +332,296 @@ namespace FirstREST.Lib_Primavera
 
         }
 
+        #endregion Artigos;
+
+
+        # region Encomendas
+
+        public static Model.RespostaErro InsereEncomenda(Model.DocVenda dv)
+        {
+            Lib_Primavera.Model.RespostaErro erro = new Model.RespostaErro();
+            GcpBEDocumentoVenda myEnc = new GcpBEDocumentoVenda();
+            //GcpBELinhaDocumentoVenda myLin = new GcpBELinhaDocumentoVenda();
+            //GcpBELinhasDocumentoVenda myLinhas = new GcpBELinhasDocumentoVenda();
+            //PreencheRelacaoVendas rl = new PreencheRelacaoVendas();
+            List<Model.LinhaDocVenda> lstlindv = new List<Model.LinhaDocVenda>();
+
+            try
+            {
+                if (PriEngine.InitializeCompany("BELAFLOR", "", "") == true)
+                {
+                    // Atribui valores ao cabecalho do doc
+                    //myEnc.set_DataDoc((DateTime)dv.Data);
+
+                    //EDIT
+
+                    myEnc.set_Entidade((string)dv.Entidade);
+                    myEnc.set_Serie((string)dv.Serie);
+                    //myEnc.set_Entidade("0001");
+                    //myEnc.set_Serie("2013");
+                    myEnc.set_Tipodoc("ECL");
+                    myEnc.set_TipoEntidade("C");
+
+                    int y = DateTime.Now.Year;
+                    int m = DateTime.Now.Month;
+                    int d =DateTime.Now.Day;
+                    int h =DateTime.Now.Hour;
+                    int min = DateTime.Now.Minute;
+                    int s = DateTime.Now.Second;
+                    DateTime dt = new DateTime(y,m,d,h,min,s);
+
+                    myEnc.set_DataDoc((DateTime)dt);
+                    myEnc.set_DataVenc((DateTime)dt);
+                    myEnc.set_Cambio(1);
+                    myEnc.set_CambioMBase(1);
+                    myEnc.set_CambioMAlt(1);
+                    myEnc.set_CondPag("1");
+                    myEnc.set_EntidadeFac((string)dv.Entidade);
+                    myEnc.set_Seccao("1");
+                    myEnc.set_RegimeIva("0");
+                    myEnc.set_ArredondamentoIva(0);
+
+
+                    // Linhas do documento para a lista de linhas
+                    lstlindv = dv.LinhasDoc;
+                    //PriEngine.Engine.Comercial.Vendas.PreencheDadosRelacionados(myEnc, rl);
+
+                    for(int i = 0; i<lstlindv.Count; i++)
+                    {
+                        //{
+                            try
+                            {
+                                //PriEngine.Engine.Comercial.Vendas.AdicionaLinha(myEnc, "DV.0001", 2.0, "", "", 14.0, 0.0);
+                                PriEngine.Engine.Comercial.Vendas.AdicionaLinha(myEnc, lstlindv.ElementAt(i).CodArtigo, lstlindv.ElementAt(i).Quantidade, "", "", lstlindv.ElementAt(i).PrecoUnitario, lstlindv.ElementAt(i).Desconto);
+
+                                /*
+                                    myLin.set_TipoLinha("20");
+                                    myLin.set_Artigo("DV.0001");
+                                    myLin.set_Quantidade(2);
+                                    myLin.set_Armazem("");
+                                    myLin.set_Localizacao("");
+                                    myLin.set_PrecUnit(14);
+                                    myLin.set_Desconto1(0);
+                                    myLin.set_Desconto2(0);
+                                    myLin.set_Desconto3(0);
+                                    myLin.set_DescontoComercial(0);
+                                    myLin.set_Unidade("UN");
+                                    myLin.set_DataEntrega(DateTime.Now);
+                                    myLinhas.Insere(myLin);
+                                    //PriEngine.Engine.Comercial.Vendas.AdicionaLinha(myEnc, "DV.0001", 2, "", "", 14, 0);
+                                    myEnc.set_Linhas(myLinhas);
+                                */
+                            }
+                            catch (Exception e)
+                            {
+
+                                erro.Erro = 1;
+                                erro.Descricao = "1:" + lstlindv.Count + e.Message;
+                                return erro;
+                            }
+                        //}
+                    }
+
+                    PriEngine.Engine.IniciaTransaccao();
+                    PriEngine.Engine.Comercial.Vendas.Actualiza(myEnc,"Teste");
+                    PriEngine.Engine.TerminaTransaccao();
+                    erro.Erro = 0;
+                    erro.Descricao = "Sucesso";
+            
+                    return erro;
+                }
+                else
+                {
+                    erro.Erro = 1;
+                    erro.Descricao = "Erro ao abrir empresa";
+
+                    return erro;
+                }
+            }
+            catch (Exception ex)
+            {
+                //PriEngine.Engine.DesfazTransaccao();
+                erro.Erro = 1;
+                erro.Descricao = "2:"+ex.Message;
+                return erro;
+            }
+        }
+
+
+        public static List<Model.DocVenda> List_Encomendas()
+        {
+            ErpBS objMotor = new ErpBS();
+            MotorPrimavera mp = new MotorPrimavera();
+            StdBELista objListCab;
+            StdBELista objListLin;
+
+            Model.DocVenda dv = new Model.DocVenda();
+            List<Model.DocVenda> listdv = new List<Model.DocVenda>();
+
+            Model.LinhaDocVenda lindv = new Model.LinhaDocVenda();
+            List<Model.LinhaDocVenda> listlindv = new List<Model.LinhaDocVenda>();
+
+            objMotor = mp.AbreEmpresa("BELAFLOR", "sa", "123456", "Default");
+
+            objListCab = objMotor.Consulta("SELECT id, Entidade, Data, NumDoc, TotalMerc, Serie From CabecDoc where TipoDoc='ECL'");
+
+            while (!objListCab.NoFim())
+            {
+                dv = new Model.DocVenda();
+                dv.id = objListCab.Valor("id");
+                dv.Entidade = objListCab.Valor("Entidade");
+                dv.NumDoc = objListCab.Valor("NumDoc");
+                dv.Data = objListCab.Valor("Data");
+                dv.TotalMerc = objListCab.Valor("TotalMerc");
+                dv.Serie = objListCab.Valor("Serie");
+
+                objListLin = objMotor.Consulta("SELECT idCabecDoc, Artigo, Descricao, Quantidade, Unidade, PrecUnit, Desconto1, TotalILiquido, PrecoLiquido from LinhasDoc where IdCabecDoc='" + dv.id + "' order By NumLinha");
+
+                listlindv = new List<Model.LinhaDocVenda>();
+
+                while (!objListLin.NoFim())
+                {
+                    lindv = new Model.LinhaDocVenda();
+                    lindv.IdCabecDoc = objListLin.Valor("idCabecDoc");
+                    lindv.CodArtigo = objListLin.Valor("Artigo");
+                    lindv.DescArtigo = objListLin.Valor("Descricao");
+                    lindv.Quantidade = objListLin.Valor("Quantidade");
+                    lindv.Unidade = objListLin.Valor("Unidade");
+                    lindv.Desconto = objListLin.Valor("Desconto1");
+                    lindv.PrecoUnitario = objListLin.Valor("PrecUnit");
+                    lindv.TotalILiquido = objListLin.Valor("TotalILiquido");
+                    lindv.TotalLiquido = objListLin.Valor("PrecoLiquido");
+ 
+                    listlindv.Add(lindv);
+                    objListLin.Seguinte();
+                }
+
+                dv.LinhasDoc = listlindv;
+                listdv.Add(dv);
+                objListCab.Seguinte();
+            }
+
+            return listdv;
+        }
 
 
 
+        public static Model.DocVenda Get_Encomenda(string numdoc)
+        {
+            ErpBS objMotor = new ErpBS();
+            MotorPrimavera mp = new MotorPrimavera();
+            StdBELista objListCab;
+            StdBELista objListLin;
+
+            Model.DocVenda dv = new Model.DocVenda();
+            Model.LinhaDocVenda lindv = new Model.LinhaDocVenda();
+            List<Model.LinhaDocVenda> listlindv = new List<Model.LinhaDocVenda>();
+
+            objMotor = mp.AbreEmpresa("BELAFLOR", "sa", "123456", "Default");
+
+            string st = "SELECT id, Entidade, Data, NumDoc, TotalMerc, Serie FROM CabecDoc WHERE TipoDoc='ECL' AND NumDoc='" + numdoc + "'";
+            objListCab = objMotor.Consulta(st);
+
+            if (objListCab.Vazia())
+                return null;
+
+            dv = new Model.DocVenda();
+            dv.id = objListCab.Valor("id");
+            dv.Entidade = objListCab.Valor("Entidade");
+            dv.NumDoc = objListCab.Valor("NumDoc");
+            dv.Data = objListCab.Valor("Data");
+            dv.TotalMerc = objListCab.Valor("TotalMerc");
+            dv.Serie = objListCab.Valor("Serie");
+
+            objListLin = objMotor.Consulta("SELECT idCabecDoc, Artigo, Descricao, Quantidade, Unidade, PrecUnit, Desconto1, TotalILiquido, PrecoLiquido from LinhasDoc where IdCabecDoc='" + dv.id + "' order By NumLinha");
+
+            if (objListLin.Vazia())
+                return null;
+
+            listlindv = new List<Model.LinhaDocVenda>();
+            while (!objListLin.NoFim())
+            {
+                lindv = new Model.LinhaDocVenda();
+                lindv.IdCabecDoc = objListLin.Valor("idCabecDoc");
+                lindv.CodArtigo = objListLin.Valor("Artigo");
+                lindv.DescArtigo = objListLin.Valor("Descricao");
+                lindv.Quantidade = objListLin.Valor("Quantidade");
+                lindv.Unidade = objListLin.Valor("Unidade");
+                lindv.Desconto = objListLin.Valor("Desconto1");
+                lindv.PrecoUnitario = objListLin.Valor("PrecUnit");
+                lindv.TotalILiquido = objListLin.Valor("TotalILiquido");
+                lindv.TotalLiquido = objListLin.Valor("PrecoLiquido");
+
+                listlindv.Add(lindv);
+                objListLin.Seguinte();
+            }
+   
+            dv.LinhasDoc = listlindv;
+            return dv;
+        }
+
+        public static List<Model.DocVenda> Get_Encomendas_Cliente(string cod_cliente)
+        {
+            ErpBS objMotor = new ErpBS();
+            MotorPrimavera mp = new MotorPrimavera();
+            StdBELista objListCab;
+            StdBELista objListLin;
+
+            Model.DocVenda dv = new Model.DocVenda();
+            List<Model.DocVenda> listdv = new List<Model.DocVenda>();
+
+            Model.LinhaDocVenda lindv = new Model.LinhaDocVenda();
+            List<Model.LinhaDocVenda> listlindv = new List<Model.LinhaDocVenda>();
+
+            objMotor = mp.AbreEmpresa("BELAFLOR", "sa", "123456", "Default");
+
+            objListCab = objMotor.Consulta("SELECT id, Entidade, Data, NumDoc, TotalMerc, Serie From CabecDoc where TipoDoc='ECL' AND Entidade='" + cod_cliente + "'");
+
+            if (objListCab.Vazia())
+                return null;
+
+            while (!objListCab.NoFim())
+            {
+                dv = new Model.DocVenda();
+                dv.id = objListCab.Valor("id");
+                dv.Entidade = objListCab.Valor("Entidade");
+                dv.NumDoc = objListCab.Valor("NumDoc");
+                dv.Data = objListCab.Valor("Data");
+                dv.TotalMerc = objListCab.Valor("TotalMerc");
+                dv.Serie = objListCab.Valor("Serie");
+
+                objListLin = objMotor.Consulta("SELECT idCabecDoc, Artigo, Descricao, Quantidade, Unidade, PrecUnit, Desconto1, TotalILiquido, PrecoLiquido from LinhasDoc where IdCabecDoc='" + dv.id + "' order By NumLinha");
+
+                if (objListLin.Vazia())
+                    return null;
+
+                listlindv = new List<Model.LinhaDocVenda>();
+
+                while (!objListLin.NoFim())
+                {
+                    lindv = new Model.LinhaDocVenda();
+                    lindv.IdCabecDoc = objListLin.Valor("idCabecDoc");
+                    lindv.CodArtigo = objListLin.Valor("Artigo");
+                    lindv.DescArtigo = objListLin.Valor("Descricao");
+                    lindv.Quantidade = objListLin.Valor("Quantidade");
+                    lindv.Unidade = objListLin.Valor("Unidade");
+                    lindv.Desconto = objListLin.Valor("Desconto1");
+                    lindv.PrecoUnitario = objListLin.Valor("PrecUnit");
+                    lindv.TotalILiquido = objListLin.Valor("TotalILiquido");
+                    lindv.TotalLiquido = objListLin.Valor("PrecoLiquido");
+
+                    listlindv.Add(lindv);
+                    objListLin.Seguinte();
+                }
+
+                dv.LinhasDoc = listlindv;
+                listdv.Add(dv);
+                objListCab.Seguinte();
+            }
+
+            return listdv;
+        }
+        
+        # endregion Encomendas;
     }
 }

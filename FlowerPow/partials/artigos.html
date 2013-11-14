@@ -1,0 +1,14 @@
+﻿<div class="container">
+    <h2>Artigos</h2>
+
+    {{status}}
+
+	<table class="table table-striped">
+		<td><b>Codigo</b></td>
+		<td><b>Descrição</b></td>
+		<tr ng-repeat="artigo in artigos">
+			<td>{{artigo.CodArtigo}}</td>
+			<td>{{artigo.DescArtigo}}</td>
+		</tr>
+	</table>
+</div>

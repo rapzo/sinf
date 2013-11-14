@@ -14,13 +14,13 @@ using Interop.IGcpBS800;
 
 namespace FirstREST.Lib_Primavera
 {
-    public static class MotorPrimavera
+    public class MotorPrimavera
     {
 
         private static  StdPlatBS Plataforma = new StdPlatBS();
         private static ErpBS MotorLE = new ErpBS();
 
-        public static ErpBS AbreEmpresa(string strEmpresa, string strUtilizador, string strPassword, string strInstancia)
+        public ErpBS AbreEmpresa(string strEmpresa, string strUtilizador, string strPassword, string strInstancia)
         {
             //------------------------------------------------------------------------
             //Open plt

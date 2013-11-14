@@ -7,6 +7,8 @@ using System.Net.Http;
 using System.Web.Http;
 using FirstREST.Lib_Primavera.Model;
 using FirstREST.Lib_Primavera;
+using System.Web.Http.ModelBinding;
+using Newtonsoft.Json.Linq;
 
 namespace FlowerPow.Controllers
 {
@@ -47,7 +49,7 @@ namespace FlowerPow.Controllers
             {
                 var response = Request.CreateResponse(
                    HttpStatusCode.Created, cliente);
-                string uri = Url.Link("DefaultApi", new { CodCliente = cliente.CodCliente });
+                string uri = Url.Link("ActionApi", new { CodCliente = cliente.CodCliente });
                 response.Headers.Location = new Uri(uri);
                 return response;
             }
