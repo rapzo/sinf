@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FirstREST.Lib_Primavera;
+using FirstREST.Lib_Primavera.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -19,6 +21,27 @@ namespace FlowerPow.Controllers
         public void Post([FromBody]string value)
         {
         }
+
+        /*public HttpResponseMessage PostRegisto(Utilizador utilizador)
+        {
+            RespostaErro erro = new RespostaErro();
+            erro = Comercial.RegistaUtilizador(utilizador);
+
+            if (erro.Erro == 0)
+            {
+                var response = Request.CreateResponse(
+                   HttpStatusCode.Created, utilizador);
+                string uri = Url.Link("ActionApi", new { CodCliente = utilizador.CodCliente });
+                response.Headers.Location = new Uri(uri);
+                return response;
+            }
+
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+
+        }*/
 
         // PUT api/default1/5
         public void Put(int id, [FromBody]string value)

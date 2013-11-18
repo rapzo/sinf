@@ -440,7 +440,7 @@ namespace FirstREST.Lib_Primavera
             }
             catch (Exception ex)
             {
-                //PriEngine.Engine.DesfazTransaccao();
+                PriEngine.Engine.DesfazTransaccao();
                 erro.Erro = 1;
                 erro.Descricao = "2:"+ex.Message;
                 return erro;
