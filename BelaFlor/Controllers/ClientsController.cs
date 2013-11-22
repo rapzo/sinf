@@ -10,7 +10,7 @@ using BelaFlor.Lib_Primavera;
 using System.Web.Http.ModelBinding;
 using Newtonsoft.Json.Linq;
 
-namespace FlowerPow.Controllers
+namespace BelaFlor.Controllers
 {
     public class ClientsController : ApiController
     {

@@ -7,7 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace FlowerPow.Controllers
+namespace BelaFlor.Controllers
 {
     public class SessionsController : ApiController
     {

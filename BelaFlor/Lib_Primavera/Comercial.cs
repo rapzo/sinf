@@ -15,6 +15,9 @@ namespace BelaFlor.Lib_Primavera
 {
     public class Comercial
     {
+        # region User
+
+        #endregion User;
 
 
         # region Client
