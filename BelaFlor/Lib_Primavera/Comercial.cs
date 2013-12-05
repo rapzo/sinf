@@ -34,7 +34,7 @@ namespace BelaFlor.Lib_Primavera
                 
                 //objList = PriEngine.Engine.Comercial.Clients.LstClients();
        
-                objList = PriEngine.Engine.Consulta("SELECT Cliente, Nome, Moeda, Morada, Telefone, NumContrib as NumContribuinte FROM  CLIENTES");
+                objList = PriEngine.Engine.Consulta("SELECT Cliente, Nome, Moeda, Fac_Mor, Fac_Tel, NumContrib as NumContribuinte FROM  CLIENTES");
 
                 while (!objList.NoFim())
                 {
@@ -43,8 +43,8 @@ namespace BelaFlor.Lib_Primavera
                     cli.NomeCliente = objList.Valor("Nome");
                     cli.Moeda = objList.Valor("Moeda");
                     cli.NumContribuinte = objList.Valor("NumContribuinte");
-                    cli.Moeda = objList.Valor("Morada");
-                    cli.NumContribuinte = objList.Valor("Telefone");
+                    cli.MoradaCliente = objList.Valor("Fac_Mor");
+                    cli.Telefone = objList.Valor("Fac_Tel");
 
                     listClients.Add(cli);
                     objList.Seguinte();
