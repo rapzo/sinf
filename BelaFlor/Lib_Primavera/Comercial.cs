@@ -1,13 +1,10 @@
-﻿using System;
+﻿using Interop.ErpBS800;
+using Interop.GcpBE800;
+using Interop.StdBE800;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Interop.ErpBS800;
-using Interop.StdPlatBS800;
-using Interop.StdBE800;
-using Interop.GcpBE800;
-using ADODB;
-using Interop.IGcpBS800;
+using System.IO;
 //using Interop.StdBESql800;
 //using Interop.StdBSSql800;
 
@@ -37,7 +34,7 @@ namespace BelaFlor.Lib_Primavera
                 
                 //objList = PriEngine.Engine.Comercial.Clients.LstClients();
        
-                objList = PriEngine.Engine.Consulta("SELECT Cliente, Nome, Moeda, NumContrib as NumContribuinte FROM  CLIENTES");
+                objList = PriEngine.Engine.Consulta("SELECT Cliente, Nome, Moeda, Morada, Telefone, NumContrib as NumContribuinte FROM  CLIENTES");
 
                 while (!objList.NoFim())
                 {
@@ -46,6 +43,8 @@ namespace BelaFlor.Lib_Primavera
                     cli.NomeCliente = objList.Valor("Nome");
                     cli.Moeda = objList.Valor("Moeda");
                     cli.NumContribuinte = objList.Valor("NumContribuinte");
+                    cli.Moeda = objList.Valor("Morada");
+                    cli.NumContribuinte = objList.Valor("Telefone");
 
                     listClients.Add(cli);
                     objList.Seguinte();
@@ -75,6 +74,8 @@ namespace BelaFlor.Lib_Primavera
                     objCli = PriEngine.Engine.Comercial.Clientes.Edita(codClient);
                     myCli.CodCliente = objCli.get_Cliente();
                     myCli.NomeCliente = objCli.get_Nome();
+                    myCli.MoradaCliente = objCli.get_Morada();
+                    myCli.Telefone = objCli.get_Telefone();
                     myCli.Moeda = objCli.get_Moeda();
                     myCli.NumContribuinte = objCli.get_NumContribuinte();
                     return myCli;
@@ -280,14 +281,15 @@ namespace BelaFlor.Lib_Primavera
                 }
                 else
                 {
+                    StdBELista objList = PriEngine.Engine.Consulta("Select top 1 id from anexos where chave ='" + codArtigo + "' and tabela=4");
+
                     objArtigo = PriEngine.Engine.Comercial.Artigos.Edita(codArtigo);
                     myArt.CodArtigo = objArtigo.get_Artigo();
                     myArt.DescArtigo = objArtigo.get_Descricao();
+                    myArt.idImagem = objList.Valor("id");
 
                     return myArt;
                 }
-
-
             }
             else
             {
@@ -296,8 +298,32 @@ namespace BelaFlor.Lib_Primavera
             
         }
 
+        public static string GetArtigoImagePath(string codArtigo)
+        {
+            // ErpBS objMotor = new ErpBS();
 
+            GcpBEArtigo objArtigo = new GcpBEArtigo();
 
+            if (PriEngine.InitializeCompany("BELAFLOR", "", "") == true)
+            {
+
+                if (PriEngine.Engine.Comercial.Artigos.Existe(codArtigo) == false)
+                {
+                    return null;
+                }
+                else
+                {
+                    StdBELista objList = PriEngine.Engine.Consulta("Select top 1 id from anexos where chave ='" + codArtigo + "' and tabela=4");
+
+                    return "C:/Program Files/PRIMAVERA/SG800/Dados/LP/ANEXOS/" + objList.Valor("id") + ".jpg";
+                }
+            }
+            else
+            {
+                return null;
+            }
+
+        }
 
 
         public static List<Model.Article> ListArticles()

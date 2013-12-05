@@ -7,6 +7,16 @@ namespace BelaFlor.Lib_Primavera.Model
 {
     public class Client
     {
+        public string MoradaCliente
+        {
+            get;
+            set;
+        }
+        public string Telefone
+        {
+            get;
+            set;
+        }
 
         public string CodCliente
         {
