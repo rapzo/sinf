@@ -33,8 +33,8 @@ namespace BelaFlor.Lib_Primavera
             {
                 
                 //objList = PriEngine.Engine.Comercial.Clients.LstClients();
-       
-                objList = PriEngine.Engine.Consulta("SELECT Cliente, Nome, Moeda, Fac_Mor, Fac_Tel, NumContrib as NumContribuinte FROM  CLIENTES");
+
+                objList = PriEngine.Engine.Consulta("SELECT Cliente, Nome, Moeda, Fac_Mor, Fac_Tel, NumContrib as NumContribuinte, CDU_CampoVar1 as Username, CDU_CampoVar2 as Password FROM  CLIENTES");
 
                 while (!objList.NoFim())
                 {
@@ -45,6 +45,8 @@ namespace BelaFlor.Lib_Primavera
                     cli.NumContribuinte = objList.Valor("NumContribuinte");
                     cli.MoradaCliente = objList.Valor("Fac_Mor");
                     cli.Telefone = objList.Valor("Fac_Tel");
+                    cli.Username = objList.Valor("Username");
+                    cli.Password = objList.Valor("Password");
 
                     listClients.Add(cli);
                     objList.Seguinte();
@@ -78,6 +80,8 @@ namespace BelaFlor.Lib_Primavera
                     myCli.Telefone = objCli.get_Telefone();
                     myCli.Moeda = objCli.get_Moeda();
                     myCli.NumContribuinte = objCli.get_NumContribuinte();
+                    myCli.Username = objCli.get_CamposUtil().get_Item("CDU_CampoVar1").Valor;
+                    myCli.Password = objCli.get_CamposUtil().get_Item("CDU_CampoVar2").Valor;
                     return myCli;
                 }
                 else
@@ -118,8 +122,18 @@ namespace BelaFlor.Lib_Primavera
                         objCli.set_EmModoEdicao(true);
 
                         objCli.set_Nome(cliente.NomeCliente);
+                        objCli.set_Telefone(cliente.Telefone);
+                        objCli.set_Morada(cliente.MoradaCliente);
                         objCli.set_NumContribuinte(cliente.NumContribuinte);
                         objCli.set_Moeda(cliente.Moeda);
+                        StdBECampos campos = new StdBECampos();
+                        StdBECampo username = new StdBECampo();
+                        StdBECampo password = new StdBECampo();
+                        username.Valor = cliente.Username;
+                        password.Valor = cliente.Password;
+                        campos.Insere(username);
+                        campos.Insere(password);
+                        objCli.set_CamposUtil(campos);
 
                         PriEngine.Engine.Comercial.Clientes.Actualiza(objCli);
 
