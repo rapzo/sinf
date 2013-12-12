@@ -30,7 +30,7 @@ namespace BelaFlor.Controllers
             if (client == null)
             {
                 throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.NotFound));
+                        Request.CreateResponse(HttpStatusCode.NotFound, "O cliente não existe."));
 
             }
             else

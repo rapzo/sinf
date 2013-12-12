@@ -36,7 +36,7 @@ namespace BelaFlor.Controllers
             if (artigo == null)
             {
                 throw new HttpResponseException(
-                  Request.CreateResponse(HttpStatusCode.NotFound));
+                  Request.CreateResponse(HttpStatusCode.NotFound, "O artigo não existe"));
             }
             else
             {

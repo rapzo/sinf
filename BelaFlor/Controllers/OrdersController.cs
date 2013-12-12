@@ -43,7 +43,7 @@ namespace BelaFlor.Controllers
             if (docsvenda == null)
             {
                 throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.NotFound));
+                        Request.CreateResponse(HttpStatusCode.NotFound, "O cliente não tem nehuma encomenda"));
             }
             else
             {
