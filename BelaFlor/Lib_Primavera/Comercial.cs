@@ -126,13 +126,19 @@ namespace BelaFlor.Lib_Primavera
                         objCli.set_Morada(cliente.MoradaCliente);
                         objCli.set_NumContribuinte(cliente.NumContribuinte);
                         objCli.set_Moeda(cliente.Moeda);
-                        StdBECampos campos = new StdBECampos();
+
                         StdBECampo username = new StdBECampo();
-                        StdBECampo password = new StdBECampo();
+                        username.Nome = "CDU_CampoVar1";
                         username.Valor = cliente.Username;
+
+                        StdBECampo password = new StdBECampo();
+                        password.Nome = "CDU_CampoVar2";
                         password.Valor = cliente.Password;
+
+                        StdBECampos campos = new StdBECampos();
                         campos.Insere(username);
                         campos.Insere(password);
+
                         objCli.set_CamposUtil(campos);
 
                         PriEngine.Engine.Comercial.Clientes.Actualiza(objCli);
@@ -226,6 +232,22 @@ namespace BelaFlor.Lib_Primavera
                     myCli.set_Nome(cli.NomeCliente);
                     myCli.set_NumContribuinte(cli.NumContribuinte);
                     myCli.set_Moeda(cli.Moeda);
+                    myCli.set_Morada(cli.MoradaCliente);
+                    myCli.set_Telefone(cli.Telefone);
+
+                    StdBECampo username = new StdBECampo();
+                    username.Nome = "CDU_CampoVar1";
+                    username.Valor = cli.Username;
+
+                    StdBECampo password = new StdBECampo();
+                    password.Nome = "CDU_CampoVar2";
+                    password.Valor = cli.Password;
+                    
+                    StdBECampos campos = new StdBECampos();
+                    campos.Insere(username);
+                    campos.Insere(password);
+                    
+                    myCli.set_CamposUtil(campos);
 
                     PriEngine.Engine.Comercial.Clientes.Actualiza(myCli);
 

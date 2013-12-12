@@ -56,7 +56,7 @@ namespace BelaFlor.Controllers
 
             else
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, erro.Descricao);
             }
 
         }
