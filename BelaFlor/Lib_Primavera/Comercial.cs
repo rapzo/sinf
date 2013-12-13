@@ -366,7 +366,7 @@ namespace BelaFlor.Lib_Primavera
         {
             ErpBS objMotor = new ErpBS();
             //MotorPrimavera mp = new MotorPrimavera();
-            StdBELista objList;
+            StdBELista objList, objList2;
 
             Model.Article art = new Model.Article();
             List<Model.Article> listArts = new List<Model.Article>();
@@ -381,6 +381,10 @@ namespace BelaFlor.Lib_Primavera
                     art = new Model.Article();
                     art.CodArtigo = objList.Valor("artigo");
                     art.DescArtigo = objList.Valor("descricao");
+
+                    objList2 = PriEngine.Engine.Consulta("Select unidade, pvp1 from artigomoeda where artigo ='" + art.CodArtigo + "'");
+                    art.Preco = objList2.Valor("pvp1");
+                    art.Unidade = objList2.Valor("unidade");
 
                     listArts.Add(art);
                     objList.Seguinte();

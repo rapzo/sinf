@@ -19,6 +19,18 @@ namespace BelaFlor.Lib_Primavera.Model
             set;
         }
 
+        public string Unidade
+        {
+            get;
+            set;
+        }
+
+        public double Preco
+        {
+            get;
+            set;
+        }
+
         public string idImagem
         {
             get;
