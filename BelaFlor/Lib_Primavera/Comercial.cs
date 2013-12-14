@@ -304,7 +304,8 @@ namespace BelaFlor.Lib_Primavera
         public static Lib_Primavera.Model.Article GetArtigo(string codArtigo)
         {
             // ErpBS objMotor = new ErpBS();
-            
+
+            StdBELista objList, objList2;
             GcpBEArtigo objArtigo = new GcpBEArtigo();
             Model.Article myArt = new Model.Article();
 
@@ -317,12 +318,16 @@ namespace BelaFlor.Lib_Primavera
                 }
                 else
                 {
-                    StdBELista objList = PriEngine.Engine.Consulta("Select top 1 id from anexos where chave ='" + codArtigo + "' and tabela=4");
+                    objList = PriEngine.Engine.Consulta("Select top 1 id from anexos where chave ='" + codArtigo + "' and tabela=4");
 
                     objArtigo = PriEngine.Engine.Comercial.Artigos.Edita(codArtigo);
                     myArt.CodArtigo = objArtigo.get_Artigo();
                     myArt.DescArtigo = objArtigo.get_Descricao();
                     myArt.idImagem = objList.Valor("id");
+
+                    objList2 = PriEngine.Engine.Consulta("Select unidade, pvp1 from artigomoeda where artigo ='" + codArtigo + "'");
+                    myArt.Preco = objList2.Valor("pvp1");
+                    myArt.Unidade = objList2.Valor("unidade");
 
                     return myArt;
                 }
@@ -366,7 +371,7 @@ namespace BelaFlor.Lib_Primavera
         {
             ErpBS objMotor = new ErpBS();
             //MotorPrimavera mp = new MotorPrimavera();
-            StdBELista objList, objList2;
+            StdBELista objList, objList2, objList3;
 
             Model.Article art = new Model.Article();
             List<Model.Article> listArts = new List<Model.Article>();
@@ -385,6 +390,10 @@ namespace BelaFlor.Lib_Primavera
                     objList2 = PriEngine.Engine.Consulta("Select unidade, pvp1 from artigomoeda where artigo ='" + art.CodArtigo + "'");
                     art.Preco = objList2.Valor("pvp1");
                     art.Unidade = objList2.Valor("unidade");
+
+                    objList3 = PriEngine.Engine.Consulta("Select top 1 id from anexos where chave ='" + art.CodArtigo + "' and tabela=4");
+                    if(!objList3.Vazia())
+                        art.idImagem = objList3.Valor("id");
 
                     listArts.Add(art);
                     objList.Seguinte();
