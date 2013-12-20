@@ -1,0 +1,5 @@
+C:\Users\user\Desktop\Site\BelaFlor.dll
+C:\Users\user\Desktop\Site\BelaFlor.pdb
+C:\Users\user\Desktop\SINF_rep\BelaFlor\obj\Release\BelaFlor.dll
+C:\Users\user\Desktop\SINF_rep\BelaFlor\obj\Release\BelaFlor.pdb
+C:\Users\user\Desktop\SINF_rep\BelaFlor\obj\Release\BelaFlor.csprojResolveAssemblyReference.cache

@@ -19,6 +19,12 @@ namespace BelaFlor.Lib_Primavera.Model
             set;
         }
 
+        public string Obs
+        {
+            get;
+            set;
+        }
+
         public string Unidade
         {
             get;
@@ -36,6 +42,5 @@ namespace BelaFlor.Lib_Primavera.Model
             get;
             set;
         }
-
     }
 }

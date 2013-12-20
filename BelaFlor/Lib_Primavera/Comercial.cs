@@ -34,7 +34,7 @@ namespace BelaFlor.Lib_Primavera
                 
                 //objList = PriEngine.Engine.Comercial.Clients.LstClients();
 
-                objList = PriEngine.Engine.Consulta("SELECT Cliente, Nome, Moeda, Fac_Mor, Fac_Tel, NumContrib as NumContribuinte, CDU_CampoVar1 as Username, CDU_CampoVar2 as Password FROM  CLIENTES");
+                objList = PriEngine.Engine.Consulta("SELECT Cliente, Nome, Moeda, Fac_Mor, Fac_Tel, NumContrib as NumContribuinte, CDU_CampoVar1 as Username, CDU_CampoVar2 as Password, EnderecoWeb as email FROM  CLIENTES");
 
                 while (!objList.NoFim())
                 {
@@ -45,8 +45,9 @@ namespace BelaFlor.Lib_Primavera
                     cli.NumContribuinte = objList.Valor("NumContribuinte");
                     cli.MoradaCliente = objList.Valor("Fac_Mor");
                     cli.Telefone = objList.Valor("Fac_Tel");
-                    cli.Username = objList.Valor("Username");
-                    cli.Password = objList.Valor("Password");
+                    //cli.Username = objList.Valor("Username");
+                    //cli.Password = objList.Valor("Password");
+                    cli.email = objList.Valor("email");
 
                     listClients.Add(cli);
                     objList.Seguinte();
@@ -80,8 +81,15 @@ namespace BelaFlor.Lib_Primavera
                     myCli.Telefone = objCli.get_Telefone();
                     myCli.Moeda = objCli.get_Moeda();
                     myCli.NumContribuinte = objCli.get_NumContribuinte();
-                    myCli.Username = objCli.get_CamposUtil().get_Item("CDU_CampoVar1").Valor;
-                    myCli.Password = objCli.get_CamposUtil().get_Item("CDU_CampoVar2").Valor;
+
+                    //if (objCli.get_CamposUtil() != null)
+                    //{
+                    //    if (objCli.get_CamposUtil().get_Item("CDU_CampoVar1") != null)
+                    //        myCli.Username = objCli.get_CamposUtil().get_Item("CDU_CampoVar1").Valor;
+                    //    if (objCli.get_CamposUtil().get_Item("CDU_CampoVar1") != null)
+                    //        myCli.Password = objCli.get_CamposUtil().get_Item("CDU_CampoVar2").Valor;
+                    //}
+                    myCli.email = objCli.get_EnderecoWeb();
                     return myCli;
                 }
                 else
@@ -126,20 +134,21 @@ namespace BelaFlor.Lib_Primavera
                         objCli.set_Morada(cliente.MoradaCliente);
                         objCli.set_NumContribuinte(cliente.NumContribuinte);
                         objCli.set_Moeda(cliente.Moeda);
+                        objCli.set_EnderecoWeb(cliente.email);
 
-                        StdBECampo username = new StdBECampo();
-                        username.Nome = "CDU_CampoVar1";
-                        username.Valor = cliente.Username;
+                        //StdBECampo username = new StdBECampo();
+                        //username.Nome = "CDU_CampoVar1";
+                        //username.Valor = cliente.Username;
 
-                        StdBECampo password = new StdBECampo();
-                        password.Nome = "CDU_CampoVar2";
-                        password.Valor = cliente.Password;
+                        //StdBECampo password = new StdBECampo();
+                        //password.Nome = "CDU_CampoVar2";
+                        //password.Valor = cliente.Password;
 
-                        StdBECampos campos = new StdBECampos();
-                        campos.Insere(username);
-                        campos.Insere(password);
+                        //StdBECampos campos = new StdBECampos();
+                        //campos.Insere(username);
+                        //campos.Insere(password);
 
-                        objCli.set_CamposUtil(campos);
+                        //objCli.set_CamposUtil(campos);
 
                         PriEngine.Engine.Comercial.Clientes.Actualiza(objCli);
 
@@ -235,19 +244,19 @@ namespace BelaFlor.Lib_Primavera
                     myCli.set_Morada(cli.MoradaCliente);
                     myCli.set_Telefone(cli.Telefone);
 
-                    StdBECampo username = new StdBECampo();
-                    username.Nome = "CDU_CampoVar1";
-                    username.Valor = cli.Username;
+                    //StdBECampo username = new StdBECampo();
+                    //username.Nome = "CDU_CampoVar1";
+                    //username.Valor = cli.Username;
 
-                    StdBECampo password = new StdBECampo();
-                    password.Nome = "CDU_CampoVar2";
-                    password.Valor = cli.Password;
+                    //StdBECampo password = new StdBECampo();
+                    //password.Nome = "CDU_CampoVar2";
+                    //password.Valor = cli.Password;
                     
-                    StdBECampos campos = new StdBECampos();
-                    campos.Insere(username);
-                    campos.Insere(password);
+                    //StdBECampos campos = new StdBECampos();
+                    //campos.Insere(username);
+                    //campos.Insere(password);
                     
-                    myCli.set_CamposUtil(campos);
+                    //myCli.set_CamposUtil(campos);
 
                     PriEngine.Engine.Comercial.Clientes.Actualiza(myCli);
 
@@ -323,6 +332,7 @@ namespace BelaFlor.Lib_Primavera
                     objArtigo = PriEngine.Engine.Comercial.Artigos.Edita(codArtigo);
                     myArt.CodArtigo = objArtigo.get_Artigo();
                     myArt.DescArtigo = objArtigo.get_Descricao();
+                    myArt.Obs = objArtigo.get_Observacoes();
                     myArt.idImagem = objList.Valor("id");
 
                     objList2 = PriEngine.Engine.Consulta("Select unidade, pvp1 from artigomoeda where artigo ='" + codArtigo + "'");
@@ -371,7 +381,7 @@ namespace BelaFlor.Lib_Primavera
         {
             ErpBS objMotor = new ErpBS();
             //MotorPrimavera mp = new MotorPrimavera();
-            StdBELista objList, objList2, objList3;
+            StdBELista objList, objList2, objList3, objList4;
 
             Model.Article art = new Model.Article();
             List<Model.Article> listArts = new List<Model.Article>();
@@ -394,6 +404,9 @@ namespace BelaFlor.Lib_Primavera
                     objList3 = PriEngine.Engine.Consulta("Select top 1 id from anexos where chave ='" + art.CodArtigo + "' and tabela=4");
                     if(!objList3.Vazia())
                         art.idImagem = objList3.Valor("id");
+
+                    objList4 = PriEngine.Engine.Consulta("Select observacoes as obs from artigo where artigo ='" + art.CodArtigo + "'");
+                    art.Obs = objList4.Valor("obs");
 
                     listArts.Add(art);
                     objList.Seguinte();
