@@ -16,29 +16,29 @@ namespace BelaFlor.Controllers
         //
         // GET: /Orders/
 
-        public IEnumerable<DocVenda> Get()
+        public IEnumerable<Order> Get()
         {
             return Comercial.List_Orders();
         }
 
-        public DocVenda GetOrder(string numdoc)
-        {
-            DocVenda docvenda = Comercial.Get_Order(numdoc);
-            if (docvenda == null)
-            {
-                throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.NotFound));
+        //public DocVenda GetOrder(string numdoc)
+        //{
+        //    DocVenda docvenda = Comercial.Get_Order(numdoc);
+        //    if (docvenda == null)
+        //    {
+        //        throw new HttpResponseException(
+        //                Request.CreateResponse(HttpStatusCode.NotFound));
 
-            }
-            else
-            {
-                return docvenda;
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        return docvenda;
+        //    }
+        //}
 
-        public IEnumerable<DocVenda> GetOrderClient(string id)
+        public IEnumerable<Order> Get(string id)
         {
-            IEnumerable<DocVenda> docsvenda = Comercial.Get_Orders_Client(id);
+            IEnumerable<Order> docsvenda = Comercial.Get_Orders_Client(id);
 
             if (docsvenda == null)
             {
@@ -52,7 +52,7 @@ namespace BelaFlor.Controllers
         }
 
         [ActionName("PostMethod")]
-        public HttpResponseMessage Post(DocVenda docvenda)
+        public HttpResponseMessage Post(Order docvenda)
         {
             RespostaErro erro = new RespostaErro();
             erro = Comercial.InsertOrder(docvenda);
@@ -61,7 +61,7 @@ namespace BelaFlor.Controllers
             {
                 var response = Request.CreateResponse(
                    HttpStatusCode.Created, docvenda);
-                string uri = Url.Link("ActionApi", new { NumDoc = docvenda.NumDoc });
+                string uri = Url.Link("ActionApi", new { NumDoc = docvenda.CodArtigo});
                 response.Headers.Location = new Uri(uri);
                 return response;
             }

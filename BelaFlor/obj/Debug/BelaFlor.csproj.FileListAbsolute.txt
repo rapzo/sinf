@@ -137,3 +137,4 @@ C:\Users\user\Desktop\SINF_rep\BelaFlor\bin\zh-Hans\System.Spatial.resources.dll
 C:\Users\user\Desktop\SINF_rep\BelaFlor\bin\zh-Hant\System.Spatial.resources.dll
 C:\Users\user\Desktop\SINF_rep\BelaFlor\obj\Debug\BelaFlor.dll
 C:\Users\user\Desktop\SINF_rep\BelaFlor\obj\Debug\BelaFlor.pdb
+C:\Users\user\Desktop\SINF_rep\BelaFlor\obj\Debug\BelaFlor.csprojResolveAssemblyReference.cache

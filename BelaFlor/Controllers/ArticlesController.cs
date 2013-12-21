@@ -44,13 +44,30 @@ namespace BelaFlor.Controllers
             }
         }
 
+        public IEnumerable<Article> GetCat(string catid)
+        {
+            IEnumerable<Article> list = Comercial.ListArticlesCategory(catid);
+
+            //if (cat.Equals("category"))
+            //{
+                if (list == null)
+                {
+                    throw new HttpResponseException(
+                      Request.CreateResponse(HttpStatusCode.NotFound));
+                }
+                else return list;
+            //}
+
+            //return null;
+        }
+
 
         //[ActionName("GetImageMethod")]
-        public ActionResult GetImage(string id, string arg)
+        public ActionResult GetImage(string imgid)
         {
-            if(arg.Equals("image"))
-            {
-                string path = Comercial.GetArtigoImagePath(id);
+            //if(arg.Equals("image"))
+            //{
+                string path = Comercial.GetArtigoImagePath(imgid);
 
                 if (path == null)
                 {
@@ -61,7 +78,7 @@ namespace BelaFlor.Controllers
                 {
                     return new FilePathResult(path, "image/jpg");
                 }
-            }
+            //}
 
             return null;
         }
