@@ -45,8 +45,8 @@ namespace BelaFlor.Lib_Primavera
                     cli.NumContribuinte = objList.Valor("NumContribuinte");
                     cli.MoradaCliente = objList.Valor("Fac_Mor");
                     cli.Telefone = objList.Valor("Fac_Tel");
-                    //cli.Username = objList.Valor("Username");
-                    //cli.Password = objList.Valor("Password");
+                    cli.Username = objList.Valor("Username");
+                    cli.Password = objList.Valor("Password");
                     cli.email = objList.Valor("email");
 
                     listClients.Add(cli);
@@ -82,13 +82,13 @@ namespace BelaFlor.Lib_Primavera
                     myCli.Moeda = objCli.get_Moeda();
                     myCli.NumContribuinte = objCli.get_NumContribuinte();
 
-                    //if (objCli.get_CamposUtil() != null)
-                    //{
-                    //    if (objCli.get_CamposUtil().get_Item("CDU_CampoVar1") != null)
-                    //        myCli.Username = objCli.get_CamposUtil().get_Item("CDU_CampoVar1").Valor;
-                    //    if (objCli.get_CamposUtil().get_Item("CDU_CampoVar1") != null)
-                    //        myCli.Password = objCli.get_CamposUtil().get_Item("CDU_CampoVar2").Valor;
-                    //}
+                    if (objCli.get_CamposUtil() != null)
+                    {
+                        if (objCli.get_CamposUtil().get_Item("CDU_CampoVar1") != null)
+                            myCli.Username = objCli.get_CamposUtil().get_Item("CDU_CampoVar1").Valor;
+                        if (objCli.get_CamposUtil().get_Item("CDU_CampoVar1") != null)
+                            myCli.Password = objCli.get_CamposUtil().get_Item("CDU_CampoVar2").Valor;
+                    }
                     myCli.email = objCli.get_EnderecoWeb();
                     return myCli;
                 }
@@ -103,9 +103,6 @@ namespace BelaFlor.Lib_Primavera
 
         public static Lib_Primavera.Model.RespostaErro UpdClient(Lib_Primavera.Model.Client cliente)
         {
-
-
-
             Lib_Primavera.Model.RespostaErro erro = new Model.RespostaErro();
             ErpBS objMotor = new ErpBS();
              
@@ -136,19 +133,19 @@ namespace BelaFlor.Lib_Primavera
                         objCli.set_Moeda(cliente.Moeda);
                         objCli.set_EnderecoWeb(cliente.email);
 
-                        //StdBECampo username = new StdBECampo();
-                        //username.Nome = "CDU_CampoVar1";
-                        //username.Valor = cliente.Username;
+                        StdBECampo username = new StdBECampo();
+                        username.Nome = "CDU_CampoVar1";
+                        username.Valor = cliente.Username;
 
-                        //StdBECampo password = new StdBECampo();
-                        //password.Nome = "CDU_CampoVar2";
-                        //password.Valor = cliente.Password;
+                        StdBECampo password = new StdBECampo();
+                        password.Nome = "CDU_CampoVar2";
+                        password.Valor = cliente.Password;
 
-                        //StdBECampos campos = new StdBECampos();
-                        //campos.Insere(username);
-                        //campos.Insere(password);
+                        StdBECampos campos = new StdBECampos();
+                        campos.Insere(username);
+                        campos.Insere(password);
 
-                        //objCli.set_CamposUtil(campos);
+                        objCli.set_CamposUtil(campos);
 
                         PriEngine.Engine.Comercial.Clientes.Actualiza(objCli);
 
@@ -236,6 +233,12 @@ namespace BelaFlor.Lib_Primavera
             {
                 if (PriEngine.InitializeCompany("BELAFLOR", "", "") == true)
                 {
+                    if (cli == null)
+                    {
+                        erro.Erro = 1;
+                        erro.Descricao = "Dados errados!";
+                        return erro;
+                    }
 
                     myCli.set_Cliente(cli.CodCliente);
                     myCli.set_Nome(cli.NomeCliente);
@@ -243,20 +246,21 @@ namespace BelaFlor.Lib_Primavera
                     myCli.set_Moeda(cli.Moeda);
                     myCli.set_Morada(cli.MoradaCliente);
                     myCli.set_Telefone(cli.Telefone);
+                    myCli.set_EnderecoWeb(cli.email);
 
-                    //StdBECampo username = new StdBECampo();
-                    //username.Nome = "CDU_CampoVar1";
-                    //username.Valor = cli.Username;
+                    StdBECampo username = new StdBECampo();
+                    username.Nome = "CDU_CampoVar1";
+                    username.Valor = cli.Username;
 
-                    //StdBECampo password = new StdBECampo();
-                    //password.Nome = "CDU_CampoVar2";
-                    //password.Valor = cli.Password;
-                    
-                    //StdBECampos campos = new StdBECampos();
-                    //campos.Insere(username);
-                    //campos.Insere(password);
-                    
-                    //myCli.set_CamposUtil(campos);
+                    StdBECampo password = new StdBECampo();
+                    password.Nome = "CDU_CampoVar2";
+                    password.Valor = cli.Password;
+
+                    StdBECampos campos = new StdBECampos();
+                    campos.Insere(username);
+                    campos.Insere(password);
+
+                    myCli.set_CamposUtil(campos);
 
                     PriEngine.Engine.Comercial.Clientes.Actualiza(myCli);
 

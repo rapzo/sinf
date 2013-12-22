@@ -259,6 +259,7 @@
     </Compile>
     <Compile Include="Lib_Primavera\Comercial.cs" />
     <Compile Include="Lib_Primavera\Model\Article.cs" />
+    <Compile Include="Lib_Primavera\Model\User.cs" />
     <Compile Include="Lib_Primavera\Model\Client.cs" />
     <Compile Include="Lib_Primavera\Model\Category.cs" />
     <Compile Include="Lib_Primavera\Model\Order.cs" />
