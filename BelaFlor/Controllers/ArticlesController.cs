@@ -9,10 +9,11 @@ using BelaFlor.Lib_Primavera.Model;
 using BelaFlor.Lib_Primavera;
 using System.Web.Http.ModelBinding;
 using Newtonsoft.Json.Linq;
-using System.Web.Mvc;
+using System.Drawing;
 using System.IO;
-
-
+using System.Net.Http.Headers;
+using System.Windows.Forms;
+using System.Web.Mvc;
 
 namespace BelaFlor.Controllers
 {
@@ -63,27 +64,71 @@ namespace BelaFlor.Controllers
 
 
         //[ActionName("GetImageMethod")]
-        public ActionResult GetImage(string imgid)
+        //public HttpResponseMessage GetArticleImage(string imgid)
+        //{
+        //    string path = Comercial.GetArtigoImagePath(imgid);
+
+        //    if (path == null)
+        //    {
+        //        throw new HttpResponseException(
+        //            Request.CreateResponse(HttpStatusCode.NotFound));
+        //    }
+        //    else
+        //    {
+        //        Image img = Clipboard.GetImage(path, 200, 200);
+        //        MemoryStream ms = new MemoryStream();
+        //        img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+        //        HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+        //        result.Content = new ByteArrayContent(ms.ToArray());
+        //        result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+        //        return result;
+        //    }
+        //}
+
+        public HttpResponseMessage GetArticleImage(string imgid, int width, int height)
         {
-            //if(arg.Equals("image"))
-            //{
-                string path = Comercial.GetArtigoImagePath(imgid);
+            string path = Comercial.GetArtigoImagePath(imgid);
 
-                if (path == null)
-                {
-                    throw new HttpResponseException(
-                      Request.CreateResponse(HttpStatusCode.NotFound));
-                }
-                else
-                {
-                    return new FilePathResult(path, "image/jpg");
-                }
-            //}
-
-            return null;
+            if (path == null)
+            {
+                throw new HttpResponseException(
+                    Request.CreateResponse(HttpStatusCode.NotFound));
+            }
+            else
+            {
+                Image img = Image.FromFile(path);
+                img = new Bitmap(img, new Size(width, height));
+                MemoryStream ms = new MemoryStream();
+                img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+                result.Content = new ByteArrayContent(ms.ToArray());
+                result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpg");
+                return result;
+            }
         }
 
-        /*public byte[] GetImage(string id, string arg)
+        public HttpResponseMessage GetArticleImage(string imgid)
+        {
+            string path = Comercial.GetArtigoImagePath(imgid);
+
+            if (path == null)
+            {
+                throw new HttpResponseException(
+                    Request.CreateResponse(HttpStatusCode.NotFound));
+            }
+            else
+            {
+                Image img = Image.FromFile(path);
+                MemoryStream ms = new MemoryStream();
+                img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+                result.Content = new ByteArrayContent(ms.ToArray());
+                result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpg");
+                return result;
+            }
+        }
+
+        /*public byte[] GetArticleImage(string id, string arg)
         {
             if (arg.Equals("image"))
             {

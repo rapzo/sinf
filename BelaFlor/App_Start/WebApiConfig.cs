@@ -15,15 +15,20 @@ namespace BelaFlor
            );
 
             config.Routes.MapHttpRoute(
-              name: "GetImageMethod",
-              routeTemplate: "api/{controller}/image/{imgid}"
-          );
+              name: "GetImageMethod1",
+              routeTemplate: "api/{controller}/{imgid}/image/{width}/{height}"
+           );
+
+            config.Routes.MapHttpRoute(
+              name: "GetImageMethod2",
+              routeTemplate: "api/{controller}/{imgid}/image"
+           );
 
             config.Routes.MapHttpRoute(
                 name: "ActionApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
-            );
+           );
 
             config.Routes.MapHttpRoute(
                name: "PostMethod",
