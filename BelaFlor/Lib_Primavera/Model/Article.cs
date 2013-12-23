@@ -31,6 +31,12 @@ namespace BelaFlor.Lib_Primavera.Model
             set;
         }
 
+        public string NomeFamilia
+        {
+            get;
+            set;
+        }
+
         public string Unidade
         {
             get;

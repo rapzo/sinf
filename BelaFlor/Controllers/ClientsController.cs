@@ -26,17 +26,13 @@ namespace BelaFlor.Controllers
         // GET api/cliente/5    
         public Client Get(string id)
         {
-           Client client = Comercial.GetClient(id);
-            if (client == null)
-            {
-                throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.NotFound, "O cliente não existe."));
+            Client client = Comercial.GetClient(id);
 
-            }
-            else
-            {
-                return client;
-            }
+            if (client == null)
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound, "O cliente não existe!"));
+
+            return client;
+           
         }
 
         [ActionName("PostMethod")]
@@ -44,6 +40,7 @@ namespace BelaFlor.Controllers
         {
             RespostaErro erro = new RespostaErro();
             erro = Comercial.InsertClientObj(client);
+            Put(client);
 
             if (erro.Erro == 0)
             {

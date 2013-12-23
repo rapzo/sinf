@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Formatting;
 using System.Web.Http;
+using System.Web.Http.ModelBinding;
 
 namespace BelaFlor
 {
@@ -55,6 +57,9 @@ namespace BelaFlor
             // For more information, refer to: http://www.asp.net/web-api
 
             config.EnableSystemDiagnosticsTracing();
+            //config.Formatters.Clear();
+            //config.Formatters.Add(new JsonMediaTypeFormatter());
+            //config.Formatters.Add(new JQueryMvcFormUrlEncodedFormatter());
         }
     }
 }

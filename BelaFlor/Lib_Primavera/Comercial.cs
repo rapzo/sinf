@@ -63,10 +63,7 @@ namespace BelaFlor.Lib_Primavera
         public static Lib_Primavera.Model.Client GetClient(string codClient)
         {
             ErpBS objMotor = new ErpBS();
-
             GcpBECliente objCli = new GcpBECliente();
-
-
             Model.Client myCli = new Model.Client();
 
             if (PriEngine.InitializeCompany("BELAFLOR", "", "") == true)
@@ -75,21 +72,26 @@ namespace BelaFlor.Lib_Primavera
                 if (PriEngine.Engine.Comercial.Clientes.Existe(codClient) == true)
                 {
                     objCli = PriEngine.Engine.Comercial.Clientes.Edita(codClient);
-                    myCli.CodCliente = objCli.get_Cliente();
-                    myCli.NomeCliente = objCli.get_Nome();
-                    myCli.MoradaCliente = objCli.get_Morada();
-                    myCli.Telefone = objCli.get_Telefone();
-                    myCli.Moeda = objCli.get_Moeda();
-                    myCli.NumContribuinte = objCli.get_NumContribuinte();
 
-                    if (objCli.get_CamposUtil() != null)
-                    {
-                        if (objCli.get_CamposUtil().get_Item("CDU_CampoVar1") != null)
-                            myCli.Username = objCli.get_CamposUtil().get_Item("CDU_CampoVar1").Valor;
-                        if (objCli.get_CamposUtil().get_Item("CDU_CampoVar1") != null)
-                            myCli.Password = objCli.get_CamposUtil().get_Item("CDU_CampoVar2").Valor;
-                    }
-                    myCli.email = objCli.get_EnderecoWeb();
+                    try { myCli.CodCliente = objCli.get_Cliente(); }
+                    catch { myCli.CodCliente = ""; }
+                    try { myCli.NomeCliente = objCli.get_Nome(); }
+                    catch { myCli.NomeCliente = ""; }
+                    try { myCli.MoradaCliente = objCli.get_Morada(); }
+                    catch { myCli.MoradaCliente = ""; }
+                    try { myCli.Telefone = objCli.get_Telefone(); }
+                    catch { myCli.Telefone = ""; }
+                    try { myCli.Moeda = objCli.get_Moeda(); }
+                    catch { myCli.Moeda = ""; }
+                    try { myCli.NumContribuinte = objCli.get_NumContribuinte(); }
+                    catch { myCli.NumContribuinte = ""; }
+                    try { myCli.Username = objCli.get_CamposUtil().get_Item("CDU_CampoVar1").Valor; }
+                    catch { myCli.Username = ""; }
+                    try { myCli.Password = objCli.get_CamposUtil().get_Item("CDU_CampoVar2").Valor; }
+                    catch { myCli.Password = ""; }
+                    try { myCli.email = objCli.get_EnderecoWeb(); }
+                    catch { myCli.email = ""; }
+
                     return myCli;
                 }
                 else
@@ -99,6 +101,7 @@ namespace BelaFlor.Lib_Primavera
             }
             else
                 return null;
+          
         }
 
         public static Lib_Primavera.Model.RespostaErro UpdClient(Lib_Primavera.Model.Client cliente)
@@ -248,19 +251,19 @@ namespace BelaFlor.Lib_Primavera
                     myCli.set_Telefone(cli.Telefone);
                     myCli.set_EnderecoWeb(cli.email);
 
-                    StdBECampo username = new StdBECampo();
-                    username.Nome = "CDU_CampoVar1";
-                    username.Valor = cli.Username;
+                    //StdBECampo username = new StdBECampo();
+                    //username.Nome = "CDU_CampoVar1";
+                    //username.Valor = cli.Username;
 
-                    StdBECampo password = new StdBECampo();
-                    password.Nome = "CDU_CampoVar2";
-                    password.Valor = cli.Password;
+                    //StdBECampo password = new StdBECampo();
+                    //password.Nome = "CDU_CampoVar2";
+                    //password.Valor = cli.Password;
 
-                    StdBECampos campos = new StdBECampos();
-                    campos.Insere(username);
-                    campos.Insere(password);
+                    //StdBECampos campos = new StdBECampos();
+                    //campos.Insere(username);
+                    //campos.Insere(password);
 
-                    myCli.set_CamposUtil(campos);
+                    //myCli.set_CamposUtil(campos);
 
                     PriEngine.Engine.Comercial.Clientes.Actualiza(myCli);
 
@@ -318,7 +321,7 @@ namespace BelaFlor.Lib_Primavera
         {
             // ErpBS objMotor = new ErpBS();
 
-            StdBELista objList, objList2;
+            StdBELista objList, objList2, objList3;
             GcpBEArtigo objArtigo = new GcpBEArtigo();
             Model.Article myArt = new Model.Article();
 
@@ -338,6 +341,10 @@ namespace BelaFlor.Lib_Primavera
                     myArt.DescArtigo = objArtigo.get_Descricao();
                     myArt.Obs = objArtigo.get_Observacoes();
                     myArt.Familia = objArtigo.get_Familia();
+
+                    objList3 = PriEngine.Engine.Consulta("Select top 1 descricao from familias where familia ='" + myArt.Familia + "'");
+                    myArt.NomeFamilia = objList3.Valor("descricao");
+
                     myArt.idImagem = objList.Valor("id");
 
                     objList2 = PriEngine.Engine.Consulta("Select unidade, pvp1 from artigomoeda where artigo ='" + codArtigo + "'");
@@ -386,7 +393,7 @@ namespace BelaFlor.Lib_Primavera
         {
             ErpBS objMotor = new ErpBS();
             //MotorPrimavera mp = new MotorPrimavera();
-            StdBELista objList, objList2, objList3, objList4;
+            StdBELista objList, objList2, objList3, objList4, objList5;
 
             Model.Article art = new Model.Article();
             List<Model.Article> listArts = new List<Model.Article>();
@@ -413,6 +420,9 @@ namespace BelaFlor.Lib_Primavera
                     objList4 = PriEngine.Engine.Consulta("Select observacoes as obs, familia from artigo where artigo ='" + art.CodArtigo + "'");
                     art.Obs = objList4.Valor("obs");
                     art.Familia = objList4.Valor("familia");
+
+                    objList5 = PriEngine.Engine.Consulta("Select top 1 descricao from familias where familia ='" + art.Familia + "'");
+                    art.NomeFamilia = objList5.Valor("descricao");
 
                     listArts.Add(art);
                     objList.Seguinte();
